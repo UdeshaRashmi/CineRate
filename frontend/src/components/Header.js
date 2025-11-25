@@ -2,10 +2,12 @@ import React, { useState, useContext } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Film, Menu, X, Star, Home, Plus, User, Search, Info, Mail, LogIn, UserPlus } from 'lucide-react';
 import { AuthContext } from '../contexts/AuthContext';
+import SearchBar from './SearchBar';
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated, logout } = useContext(AuthContext);
@@ -40,17 +42,18 @@ const Header = () => {
     return location.pathname === path;
   };
 
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const query = formData.get('search');
+  const handleSearchChange = (query) => {
+    setSearchTerm(query);
     if (query.trim()) {
       navigate(`/movies?search=${encodeURIComponent(query)}`);
-      setIsMobileMenuOpen(false);
+    } else {
+      // If search is cleared, navigate to movies without search param
+      navigate('/movies');
     }
   };
 
   const handleQuickSearch = (query) => {
+    setSearchTerm(query);
     navigate(`/movies?search=${encodeURIComponent(query)}`);
     setIsMobileMenuOpen(false);
   };
@@ -87,23 +90,12 @@ const Header = () => {
 
           {/* Desktop Search Bar */}
           <div className="hidden md:block flex-1 max-w-md mx-8">
-            <form onSubmit={handleSearchSubmit} className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-5 w-5 text-purple-400" />
-              </div>
-              <input
-                type="text"
-                name="search"
-                placeholder="Search movies, directors..."
-                className="block w-full pl-10 pr-4 py-3 border border-gray-700 rounded-xl bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
-              />
-              <button
-                type="submit"
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-purple-400 hover:text-purple-300 transition-colors"
-              >
-                <Search className="h-5 w-5" />
-              </button>
-            </form>
+            <SearchBar
+              searchTerm={searchTerm}
+              onSearchChange={handleSearchChange}
+              placeholder="Search movies, directors..."
+              className="search-bar-header"
+            />
           </div>
 
           {/* Desktop Navigation */}
@@ -204,17 +196,12 @@ const Header = () => {
           <div className="lg:hidden py-6 border-t border-gray-700 bg-gradient-to-b from-gray-900 to-gray-800 rounded-b-2xl shadow-2xl mb-4">
             {/* Mobile Search */}
             <div className="mb-6 px-2">
-              <form onSubmit={handleSearchSubmit} className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Search className="h-5 w-5 text-purple-400" />
-                </div>
-                <input
-                  type="text"
-                  name="search"
-                  placeholder="Search movies..."
-                  className="block w-full pl-10 pr-4 py-3 border border-gray-700 rounded-xl bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                />
-              </form>
+              <SearchBar
+                searchTerm={searchTerm}
+                onSearchChange={handleSearchChange}
+                placeholder="Search movies..."
+                className="search-bar-mobile"
+              />
             </div>
 
             {/* Quick Search - Mobile */}
