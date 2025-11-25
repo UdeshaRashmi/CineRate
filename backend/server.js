@@ -17,6 +17,8 @@ app.use(express.json());
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/profile', require('./routes/profile'));
+app.use('/api/movies', require('./routes/movies'));
 
 // Error handling middleware
 app.use((err, req, res, next) => {
