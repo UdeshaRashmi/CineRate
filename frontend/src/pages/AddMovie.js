@@ -10,6 +10,8 @@ const AddMovie = () => {
       await movieService.createMovie(movieData);
       // Show success message or redirect
       alert('Movie added successfully!');
+      // Redirect to movies page after successful submission
+      window.location.href = '/movies';
     } catch (error) {
       console.error('Error adding movie:', error);
       alert('Error adding movie. Please try again.');
@@ -23,7 +25,7 @@ const AddMovie = () => {
         <div className="mb-8">
           <Link
             to="/movies"
-            className="inline-flex items-center text-purple-400 hover:text-purple-300 mb-4"
+            className="inline-flex items-center text-purple-400 hover:text-purple-300 mb-4 transition-colors duration-200"
           >
             <ArrowLeft size={20} className="mr-2" />
             Back to Movies
@@ -34,7 +36,7 @@ const AddMovie = () => {
 
         {/* Movie Form */}
         <div className="max-w-4xl mx-auto">
-          <div className="bg-gray-800 rounded-lg p-6">
+          <div className="bg-gray-800 rounded-xl shadow-lg p-6">
             <MovieForm
               onSubmit={handleSubmit}
               onCancel={() => window.history.back()}

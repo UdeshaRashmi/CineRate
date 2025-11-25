@@ -3,7 +3,7 @@ import { X, Upload, Image } from 'lucide-react';
 import RatingStars from './RatingStars';
 import { movieService } from '../services/movieService';
 
-const MovieForm = ({ movie, onSubmit, onCancel, isOpen }) => {
+const MovieForm = ({ movie, onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
     title: '',
     director: '',
@@ -40,7 +40,7 @@ const MovieForm = ({ movie, onSubmit, onCancel, isOpen }) => {
       setImagePreview('');
     }
     setErrors({});
-  }, [movie, isOpen]);
+  }, [movie]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -164,213 +164,118 @@ const MovieForm = ({ movie, onSubmit, onCancel, isOpen }) => {
     setImagePreview('');
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-gray-800 rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-        <div className="flex justify-between items-center p-6 border-b border-gray-700 sticky top-0 bg-gray-800">
-          <h2 className="text-2xl font-bold text-white">
-            {movie ? 'Edit Movie Review' : 'Add New Movie Review'}
-          </h2>
-          <button
-            onClick={onCancel}
-            className="text-gray-400 hover:text-white transition-colors p-2 rounded-lg hover:bg-gray-700"
-            disabled={isSubmitting}
-          >
-            <X size={24} />
-          </button>
-        </div>
-
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
-          {/* Image Preview Section */}
-          <div className="flex flex-col md:flex-row gap-6">
-            {/* Image Preview */}
-            <div className="md:w-1/3">
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Movie Poster
-              </label>
-              <div className="border-2 border-dashed border-gray-600 rounded-lg p-4 text-center h-64 flex items-center justify-center">
-                {imagePreview ? (
-                  <div className="relative w-full h-full">
-                    <img
-                      src={imagePreview}
-                      alt="Movie poster preview"
-                      className="w-full h-full object-cover rounded-lg"
-                      onError={() => setImagePreview('')}
-                    />
-                    <button
-                      type="button"
-                      onClick={clearImage}
-                      className="absolute top-2 right-2 bg-red-600 text-white p-1 rounded-full hover:bg-red-700"
-                    >
-                      <X size={16} />
-                    </button>
-                  </div>
-                ) : (
-                  <div className="text-gray-400">
-                    <Image size={48} className="mx-auto mb-2" />
-                    <p>No image selected</p>
-                    <p className="text-sm">Add an image URL below</p>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Basic Info */}
-            <div className="md:w-2/3 space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Movie Title *
-                </label>
-                <input
-                  type="text"
-                  name="title"
-                  value={formData.title}
-                  onChange={handleChange}
-                  required
-                  className={`w-full px-3 py-2 border rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
-                    errors.title ? 'border-red-500' : 'border-gray-600'
-                  }`}
-                  placeholder="Enter movie title"
-                  disabled={isSubmitting}
-                />
-                {errors.title && (
-                  <p className="text-red-400 text-sm mt-1">{errors.title}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Director *
-                </label>
-                <input
-                  type="text"
-                  name="director"
-                  value={formData.director}
-                  onChange={handleChange}
-                  required
-                  className={`w-full px-3 py-2 border rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
-                    errors.director ? 'border-red-500' : 'border-gray-600'
-                  }`}
-                  placeholder="Enter director name"
-                  disabled={isSubmitting}
-                />
-                {errors.director && (
-                  <p className="text-red-400 text-sm mt-1">{errors.director}</p>
-                )}
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Release Year *
-                  </label>
-                  <input
-                    type="number"
-                    name="releaseYear"
-                    value={formData.releaseYear}
-                    onChange={handleChange}
-                    required
-                    min="1900"
-                    max={new Date().getFullYear() + 5}
-                    className={`w-full px-3 py-2 border rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
-                      errors.releaseYear ? 'border-red-500' : 'border-gray-600'
-                    }`}
-                    disabled={isSubmitting}
-                  />
-                  {errors.releaseYear && (
-                    <p className="text-red-400 text-sm mt-1">{errors.releaseYear}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Your Rating *
-                  </label>
-                  <div className="flex items-center space-x-4">
-                    <RatingStars
-                      rating={formData.rating}
-                      onRatingChange={handleRatingChange}
-                      editable={!isSubmitting}
-                      size={28}
-                    />
-                    <span className="text-white font-semibold">
-                      {formData.rating.toFixed(1)}/5.0
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
+    <form onSubmit={handleSubmit} className="space-y-8">
+      {/* Section 1: Basic Movie Information */}
+      <div className="bg-gray-800 rounded-xl p-6 shadow-lg">
+        <h2 className="text-xl font-bold text-white mb-6 pb-2 border-b border-gray-700">Movie Information</h2>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Movie Title */}
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Movie Title *
+            </label>
+            <input
+              type="text"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              required
+              className={`w-full px-4 py-3 border rounded-lg bg-gray-750 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all ${
+                errors.title ? 'border-red-500' : 'border-gray-600'
+              }`}
+              placeholder="Enter movie title"
+              disabled={isSubmitting}
+            />
+            {errors.title && (
+              <p className="text-red-400 text-sm mt-1">{errors.title}</p>
+            )}
           </div>
 
-          {/* Genre Selection */}
+          {/* Director */}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              Genre *
+              Director *
             </label>
-            <div className="space-y-3">
-              {/* Selected Genres */}
-              {formData.genre && (
-                <div className="flex flex-wrap gap-2 mb-2">
-                  {formData.genre.split(', ').map((genre, index) => (
-                    <span
-                      key={index}
-                      className="bg-purple-600 text-white px-3 py-1 rounded-full text-sm flex items-center space-x-1"
-                    >
-                      <span>{genre}</span>
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveGenre(genre)}
-                        className="hover:text-red-200"
-                        disabled={isSubmitting}
-                      >
-                        <X size={14} />
-                      </button>
-                    </span>
-                  ))}
-                </div>
-              )}
+            <input
+              type="text"
+              name="director"
+              value={formData.director}
+              onChange={handleChange}
+              required
+              className={`w-full px-4 py-3 border rounded-lg bg-gray-750 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all ${
+                errors.director ? 'border-red-500' : 'border-gray-600'
+              }`}
+              placeholder="Enter director name"
+              disabled={isSubmitting}
+            />
+            {errors.director && (
+              <p className="text-red-400 text-sm mt-1">{errors.director}</p>
+            )}
+          </div>
 
-              {/* Genre Quick Select */}
-              <div>
-                <p className="text-sm text-gray-400 mb-2">Quick select genres:</p>
-                <div className="flex flex-wrap gap-2">
-                  {genres.map(genre => (
-                    <button
-                      key={genre}
-                      type="button"
-                      onClick={() => handleAddGenre(genre)}
-                      className="bg-gray-700 hover:bg-gray-600 text-gray-300 px-3 py-1 rounded-full text-sm transition-colors disabled:opacity-50"
-                      disabled={isSubmitting || formData.genre.includes(genre)}
-                    >
-                      + {genre}
-                    </button>
-                  ))}
-                </div>
-              </div>
+          {/* Release Year */}
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Release Year *
+            </label>
+            <input
+              type="number"
+              name="releaseYear"
+              value={formData.releaseYear}
+              onChange={handleChange}
+              required
+              min="1900"
+              max={new Date().getFullYear() + 5}
+              className={`w-full px-4 py-3 border rounded-lg bg-gray-750 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all ${
+                errors.releaseYear ? 'border-red-500' : 'border-gray-600'
+              }`}
+              disabled={isSubmitting}
+            />
+            {errors.releaseYear && (
+              <p className="text-red-400 text-sm mt-1">{errors.releaseYear}</p>
+            )}
+          </div>
+        </div>
+      </div>
 
-              {/* Manual Genre Input */}
-              <input
-                type="text"
-                name="genre"
-                value={formData.genre}
-                onChange={handleChange}
-                required
-                className={`w-full px-3 py-2 border rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
-                  errors.genre ? 'border-red-500' : 'border-gray-600'
-                }`}
-                placeholder="Or type genres separated by commas (e.g., Action, Adventure)"
-                disabled={isSubmitting}
-              />
-              {errors.genre && (
-                <p className="text-red-400 text-sm mt-1">{errors.genre}</p>
+      {/* Section 2: Movie Poster */}
+      <div className="bg-gray-800 rounded-xl p-6 shadow-lg">
+        <h2 className="text-xl font-bold text-white mb-6 pb-2 border-b border-gray-700">Movie Poster</h2>
+        
+        <div className="flex flex-col md:flex-row gap-8">
+          {/* Image Preview */}
+          <div className="md:w-1/3">
+            <div className="border-2 border-dashed border-gray-600 rounded-xl p-6 text-center h-64 flex items-center justify-center bg-gray-750">
+              {imagePreview ? (
+                <div className="relative w-full h-full">
+                  <img
+                    src={imagePreview}
+                    alt="Movie poster preview"
+                    className="w-full h-full object-contain rounded-lg"
+                    onError={() => setImagePreview('')}
+                  />
+                  <button
+                    type="button"
+                    onClick={clearImage}
+                    className="absolute -top-3 -right-3 bg-red-600 text-white p-2 rounded-full hover:bg-red-700 transition-colors shadow-lg"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              ) : (
+                <div className="text-gray-400">
+                  <Image size={48} className="mx-auto mb-3" />
+                  <p className="font-medium">No image selected</p>
+                  <p className="text-sm mt-1">Add an image URL below</p>
+                </div>
               )}
             </div>
           </div>
 
-          {/* Image URL */}
-          <div>
+          {/* Image URL Input */}
+          <div className="md:w-2/3">
             <label className="block text-sm font-medium text-gray-300 mb-2">
               Image URL
             </label>
@@ -380,7 +285,7 @@ const MovieForm = ({ movie, onSubmit, onCancel, isOpen }) => {
               value={formData.imageUrl}
               onChange={handleChange}
               onBlur={handleImageUrlBlur}
-              className={`w-full px-3 py-2 border rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+              className={`w-full px-4 py-3 border rounded-lg bg-gray-750 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all ${
                 errors.imageUrl ? 'border-red-500' : 'border-gray-600'
               }`}
               placeholder="https://example.com/movie-poster.jpg"
@@ -389,68 +294,161 @@ const MovieForm = ({ movie, onSubmit, onCancel, isOpen }) => {
             {errors.imageUrl && (
               <p className="text-red-400 text-sm mt-1">{errors.imageUrl}</p>
             )}
-            <p className="text-gray-400 text-sm mt-1">
+            <p className="text-gray-400 text-sm mt-2">
               Leave empty to use a default placeholder image
             </p>
           </div>
+        </div>
+      </div>
 
-          {/* Review */}
+      {/* Section 3: Genre and Rating */}
+      <div className="bg-gray-800 rounded-xl p-6 shadow-lg">
+        <h2 className="text-xl font-bold text-white mb-6 pb-2 border-b border-gray-700">Genre & Rating</h2>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Genre Selection */}
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Your Review *
+            <label className="block text-sm font-medium text-gray-300 mb-3">
+              Genre *
             </label>
-            <textarea
-              name="review"
-              value={formData.review}
+            
+            {/* Selected Genres */}
+            {formData.genre && (
+              <div className="flex flex-wrap gap-2 mb-4">
+                {formData.genre.split(', ').map((genre, index) => (
+                  <span
+                    key={index}
+                    className="bg-purple-600 text-white px-3 py-2 rounded-full text-sm flex items-center space-x-2"
+                  >
+                    <span>{genre}</span>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveGenre(genre)}
+                      className="hover:text-red-200 transition-colors"
+                      disabled={isSubmitting}
+                    >
+                      <X size={14} />
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {/* Genre Quick Select */}
+            <div className="mb-4">
+              <p className="text-sm text-gray-400 mb-3">Quick select genres:</p>
+              <div className="flex flex-wrap gap-2">
+                {genres.map(genre => (
+                  <button
+                    key={genre}
+                    type="button"
+                    onClick={() => handleAddGenre(genre)}
+                    className="bg-gray-700 hover:bg-gray-600 text-gray-300 px-3 py-2 rounded-full text-sm transition-colors disabled:opacity-50"
+                    disabled={isSubmitting || (formData.genre && formData.genre.includes(genre))}
+                  >
+                    + {genre}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Manual Genre Input */}
+            <input
+              type="text"
+              name="genre"
+              value={formData.genre}
               onChange={handleChange}
               required
-              rows="6"
-              className={`w-full px-3 py-2 border rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none ${
-                errors.review ? 'border-red-500' : 'border-gray-600'
+              className={`w-full px-4 py-3 border rounded-lg bg-gray-750 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all ${
+                errors.genre ? 'border-red-500' : 'border-gray-600'
               }`}
-              placeholder="Share your thoughts about the movie... What did you like? What could be better? Would you recommend it?"
+              placeholder="Or type genres separated by commas (e.g., Action, Adventure)"
               disabled={isSubmitting}
             />
-            {errors.review && (
-              <p className="text-red-400 text-sm mt-1">{errors.review}</p>
+            {errors.genre && (
+              <p className="text-red-400 text-sm mt-1">{errors.genre}</p>
             )}
-            <div className="flex justify-between text-sm text-gray-400 mt-1">
-              <span>Minimum 10 characters</span>
-              <span>{formData.review.length} characters</span>
-            </div>
           </div>
 
-          {/* Form Actions */}
-          <div className="flex justify-end space-x-4 pt-6 border-t border-gray-700">
-            <button
-              type="button"
-              onClick={onCancel}
-              className="px-6 py-3 border border-gray-600 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors duration-200 disabled:opacity-50"
-              disabled={isSubmitting}
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-200 disabled:opacity-50 flex items-center space-x-2"
-            >
-              {isSubmitting ? (
-                <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                  <span>Processing...</span>
-                </>
-              ) : (
-                <>
-                  <Upload size={20} />
-                  <span>{movie ? 'Update Review' : 'Add Movie Review'}</span>
-                </>
-              )}
-            </button>
+          {/* Rating - Simplified */}
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-3">
+              Your Rating *
+            </label>
+            <div className="flex items-center space-x-4">
+              <RatingStars
+                rating={formData.rating}
+                onRatingChange={handleRatingChange}
+                editable={!isSubmitting}
+                size={32}
+              />
+              <span className="text-lg font-semibold text-white">
+                {formData.rating.toFixed(1)}/5.0
+              </span>
+            </div>
           </div>
-        </form>
+        </div>
       </div>
-    </div>
+
+      {/* Section 4: Review */}
+      <div className="bg-gray-800 rounded-xl p-6 shadow-lg">
+        <h2 className="text-xl font-bold text-white mb-6 pb-2 border-b border-gray-700">Your Review</h2>
+        
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-2">
+            Your Review *
+          </label>
+          <textarea
+            name="review"
+            value={formData.review}
+            onChange={handleChange}
+            required
+            rows="8"
+            className={`w-full px-4 py-3 border rounded-lg bg-gray-750 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none transition-all ${
+              errors.review ? 'border-red-500' : 'border-gray-600'
+            }`}
+            placeholder="Share your thoughts about the movie... What did you like? What could be better? Would you recommend it?"
+            disabled={isSubmitting}
+          />
+          {errors.review && (
+            <p className="text-red-400 text-sm mt-1">{errors.review}</p>
+          )}
+          <div className="flex justify-between text-sm text-gray-400 mt-2">
+            <span>Minimum 10 characters</span>
+            <span>{formData.review.length} characters</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Form Actions */}
+      <div className="flex justify-end space-x-4 pt-4">
+        <button
+          type="button"
+          onClick={onCancel}
+          className="px-6 py-3 border border-gray-600 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors duration-200 disabled:opacity-50 font-medium"
+          disabled={isSubmitting}
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-200 disabled:opacity-50 flex items-center space-x-2 shadow-lg font-medium"
+        >
+          {isSubmitting ? (
+            <>
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+              <span>Processing...</span>
+            </>
+          ) : (
+            <>
+              <Upload size={20} />
+              <span>{movie ? 'Update Review' : 'Add Movie Review'}</span>
+            </>
+          )}
+        </button>
+      </div>
+    </form>
   );
 };
 
