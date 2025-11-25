@@ -1,4 +1,4 @@
- import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Film, Menu, X, Star, Home, Plus, User, Search, Info, Mail } from 'lucide-react';
 
@@ -8,14 +8,28 @@ const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Navigation items including all your pages
-  const navigation = [
+  // For demo purposes, we'll show full menu when user is logged in
+  // In a real app, you would check authentication state
+  const isAuthenticated = true;
+
+  // Navigation items for authenticated users
+  const fullNavigation = [
     { name: 'Home', href: '/', icon: Home },
     { name: 'Movies', href: '/movies', icon: Star },
     { name: 'Add Movie', href: '/add-movie', icon: Plus },
     { name: 'About', href: '/about', icon: Info },
     { name: 'Contact', href: '/contact', icon: Mail },
   ];
+
+  // Navigation items for non-authenticated users
+  const limitedNavigation = [
+    { name: 'Home', href: '/', icon: Home },
+    { name: 'About', href: '/about', icon: Info },
+    { name: 'Contact', href: '/contact', icon: Mail },
+  ];
+
+  // Determine which navigation to show based on authentication status
+  const navigation = isAuthenticated ? fullNavigation : limitedNavigation;
 
   const userMenuItems = [
     { name: 'My Profile', href: '/profile', icon: User },
@@ -125,45 +139,52 @@ const Header = () => {
               </button>
             </div>
 
-            {/* User Menu - Desktop */}
-            <div className="hidden md:block relative">
-              <button
-                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                className="flex items-center space-x-2 p-2.5 rounded-xl text-gray-300 hover:bg-gray-800 hover:text-white transition-all duration-300"
-              >
-                <User size={22} />
-                <span className="text-sm font-medium">Menu</span>
-              </button>
+            {/* Auth Menu or User Menu - Desktop */}
+            <div className="hidden md:block">
+              {isAuthenticated ? (
+                <div className="relative">
+                  <button
+                    onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                    className="flex items-center space-x-2 p-2.5 rounded-xl text-gray-300 hover:bg-gray-800 hover:text-white transition-all duration-300"
+                  >
+                    <User size={22} />
+                    <span className="text-sm font-medium">Menu</span>
+                  </button>
 
-              {/* User Dropdown Menu */}
-              {isUserMenuOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-gray-800 border border-gray-700 rounded-xl shadow-xl py-2 z-50 backdrop-blur-sm bg-opacity-95">
-                  {userMenuItems.map((item) => {
-                    const Icon = item.icon;
-                    return (
-                      <Link
-                        key={item.name}
-                        to={item.href}
-                        onClick={() => setIsUserMenuOpen(false)}
-                        className="flex items-center space-x-3 px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors rounded-lg mx-2"
-                      >
-                        <Icon size={18} />
-                        <span className="font-medium">{item.name}</span>
-                      </Link>
-                    );
-                  })}
-                  <div className="border-t border-gray-700 mt-2 pt-2">
-                    <button
-                      onClick={() => {
-                        // Handle logout
-                        setIsUserMenuOpen(false);
-                      }}
-                      className="w-full text-left flex items-center space-x-3 px-4 py-3 text-red-400 hover:bg-gray-700 hover:text-red-300 transition-colors rounded-lg mx-2"
-                    >
-                      <span className="font-medium">Sign Out</span>
-                    </button>
-                  </div>
+                  {/* User Dropdown Menu */}
+                  {isUserMenuOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-gray-800 border border-gray-700 rounded-xl shadow-xl py-2 z-50 backdrop-blur-sm bg-opacity-95">
+                      {userMenuItems.map((item) => {
+                        const Icon = item.icon;
+                        return (
+                          <Link
+                            key={item.name}
+                            to={item.href}
+                            onClick={() => setIsUserMenuOpen(false)}
+                            className="flex items-center space-x-3 px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors rounded-lg mx-2"
+                          >
+                            <Icon size={18} />
+                            <span className="font-medium">{item.name}</span>
+                          </Link>
+                        );
+                      })}
+                      <div className="border-t border-gray-700 mt-2 pt-2">
+                        <button
+                          onClick={() => {
+                            // Handle logout
+                            setIsUserMenuOpen(false);
+                          }}
+                          className="w-full text-left flex items-center space-x-3 px-4 py-3 text-red-400 hover:bg-gray-700 hover:text-red-300 transition-colors rounded-lg mx-2"
+                        >
+                          <span className="font-medium">Sign Out</span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
+              ) : (
+                // This section will be empty since we're not showing login/signup in nav
+                <div></div>
               )}
             </div>
 
@@ -231,33 +252,38 @@ const Header = () => {
               })}
             </nav>
 
-            {/* User Menu - Mobile */}
+            {/* Auth Menu or User Menu - Mobile */}
             <div className="mt-6 pt-6 border-t border-gray-700 px-2">
-              <div className="space-y-3">
-                {userMenuItems.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <Link
-                      key={item.name}
-                      to={item.href}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="flex items-center space-x-4 px-5 py-4 text-gray-300 hover:bg-gray-800 hover:text-white rounded-xl transition-colors"
-                    >
-                      <Icon size={20} />
-                      <span className="font-medium text-lg">{item.name}</span>
-                    </Link>
-                  );
-                })}
-                <button
-                  onClick={() => {
-                    // Handle logout
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="w-full flex items-center space-x-4 px-5 py-4 text-red-400 hover:bg-gray-800 hover:text-red-300 rounded-xl transition-colors"
-                >
-                  <span className="font-medium text-lg">Sign Out</span>
-                </button>
-              </div>
+              {isAuthenticated ? (
+                <div className="space-y-3">
+                  {userMenuItems.map((item) => {
+                    const Icon = item.icon;
+                    return (
+                      <Link
+                        key={item.name}
+                        to={item.href}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="flex items-center space-x-4 px-5 py-4 text-gray-300 hover:bg-gray-800 hover:text-white rounded-xl transition-colors"
+                      >
+                        <Icon size={20} />
+                        <span className="font-medium text-lg">{item.name}</span>
+                      </Link>
+                    );
+                  })}
+                  <button
+                    onClick={() => {
+                      // Handle logout
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="w-full flex items-center space-x-4 px-5 py-4 text-red-400 hover:bg-gray-800 hover:text-red-300 rounded-xl transition-colors"
+                  >
+                    <span className="font-medium text-lg">Sign Out</span>
+                  </button>
+                </div>
+              ) : (
+                // This section will be empty since we're not showing login/signup in nav
+                <div></div>
+              )}
             </div>
           </div>
         )}

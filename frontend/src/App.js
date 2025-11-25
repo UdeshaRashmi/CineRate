@@ -10,6 +10,8 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 import MyProfile from './pages/MyProfile';
 import MyReviews from './pages/MyReviews';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
 import './App.css';
 
 function App() {
@@ -28,6 +30,8 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/profile" element={<MyProfile />} />
             <Route path="/my-reviews" element={<MyReviews />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
           </Routes>
         </main>
         <Footer />
