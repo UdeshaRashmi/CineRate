@@ -59,26 +59,31 @@ const Login = () => {
     }
     
     setIsLoading(true);
+    setErrors({});
     
     try {
-      const response = await login(formData);
+      const response = await login({
+        email: formData.email,
+        password: formData.password
+      });
       
       if (response.success) {
-        // Redirect to home page
+        // Redirect to home page or previous page
         navigate('/');
       } else {
-        setErrors({ general: response.message || 'Invalid email or password' });
+        // Handle server-side errors
+        setErrors({ general: response.message || 'Login failed. Please try again.' });
       }
     } catch (error) {
-      console.error('Login error:', error);
-      setErrors({ general: error.response?.data?.message || 'Invalid email or password' });
+      // Handle network or unexpected errors
+      setErrors({ general: error.message || 'An unexpected error occurred. Please try again.' });
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-purple-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
           <div className="mx-auto h-16 w-16 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center">
@@ -147,39 +152,15 @@ const Login = () => {
                 />
                 <button
                   type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
                   onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-300"
                 >
-                  {showPassword ? (
-                    <EyeOff className="h-5 w-5 text-gray-400" />
-                  ) : (
-                    <Eye className="h-5 w-5 text-gray-400" />
-                  )}
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
               {errors.password && (
                 <p className="mt-1 text-sm text-red-400">{errors.password}</p>
               )}
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-700 rounded bg-gray-800"
-              />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-300">
-                Remember me
-              </label>
-            </div>
-
-            <div className="text-sm">
-              <Link to="/forgot-password" className="font-medium text-purple-400 hover:text-purple-300">
-                Forgot your password?
-              </Link>
             </div>
           </div>
 

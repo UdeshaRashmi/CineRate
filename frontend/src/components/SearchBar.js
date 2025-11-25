@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, X, Filter, SlidersHorizontal } from 'lucide-react';
+import { Search, X, SlidersHorizontal } from 'lucide-react';
 
 const SearchBar = ({ 
   searchTerm, 
@@ -132,10 +132,9 @@ const SearchBar = ({
 
       {/* Advanced Filters */}
       {showFilters && showAdvancedFilters && (
-        <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 animate-in fade-in duration-200">
+        <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold text-white flex items-center">
-              <Filter size={18} className="mr-2" />
+            <h3 className="text-lg font-semibold text-white">
               Advanced Filters
             </h3>
             {hasActiveFilters && (
@@ -148,69 +147,73 @@ const SearchBar = ({
             )}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Rating Range */}
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Minimum Rating
-              </label>
-              <select
-                value={filters.minRating}
-                onChange={(e) => handleFilterChange('minRating', parseFloat(e.target.value))}
-                className="w-full px-3 py-2 border border-gray-600 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              >
-                {[0, 1, 2, 3, 4].map(rating => (
-                  <option key={rating} value={rating}>
-                    {rating === 0 ? 'Any Rating' : `${rating}+ Stars`}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Min Rating
+                </label>
+                <select
+                  value={filters.minRating}
+                  onChange={(e) => handleFilterChange('minRating', parseFloat(e.target.value))}
+                  className="w-full px-3 py-2 border border-gray-600 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                >
+                  {[0, 1, 2, 3, 4].map(rating => (
+                    <option key={rating} value={rating}>
+                      {rating === 0 ? 'Any' : `${rating}+ Stars`}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Maximum Rating
-              </label>
-              <select
-                value={filters.maxRating}
-                onChange={(e) => handleFilterChange('maxRating', parseFloat(e.target.value))}
-                className="w-full px-3 py-2 border border-gray-600 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              >
-                {[1, 2, 3, 4, 5].map(rating => (
-                  <option key={rating} value={rating}>
-                    {rating === 5 ? 'Any Rating' : `Up to ${rating} Stars`}
-                  </option>
-                ))}
-              </select>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Max Rating
+                </label>
+                <select
+                  value={filters.maxRating}
+                  onChange={(e) => handleFilterChange('maxRating', parseFloat(e.target.value))}
+                  className="w-full px-3 py-2 border border-gray-600 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                >
+                  {[1, 2, 3, 4, 5].map(rating => (
+                    <option key={rating} value={rating}>
+                      {rating === 5 ? 'Any' : `Up to ${rating} Stars`}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             {/* Year Range */}
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                From Year
-              </label>
-              <input
-                type="number"
-                value={filters.yearFrom}
-                onChange={(e) => handleFilterChange('yearFrom', parseInt(e.target.value) || 1900)}
-                min="1900"
-                max={new Date().getFullYear()}
-                className="w-full px-3 py-2 border border-gray-600 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              />
-            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  From Year
+                </label>
+                <input
+                  type="number"
+                  value={filters.yearFrom}
+                  onChange={(e) => handleFilterChange('yearFrom', parseInt(e.target.value) || 1900)}
+                  min="1900"
+                  max={new Date().getFullYear()}
+                  className="w-full px-3 py-2 border border-gray-600 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                />
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                To Year
-              </label>
-              <input
-                type="number"
-                value={filters.yearTo}
-                onChange={(e) => handleFilterChange('yearTo', parseInt(e.target.value) || new Date().getFullYear())}
-                min="1900"
-                max={new Date().getFullYear()}
-                className="w-full px-3 py-2 border border-gray-600 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              />
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  To Year
+                </label>
+                <input
+                  type="number"
+                  value={filters.yearTo}
+                  onChange={(e) => handleFilterChange('yearTo', parseInt(e.target.value) || new Date().getFullYear())}
+                  min="1900"
+                  max={new Date().getFullYear()}
+                  className="w-full px-3 py-2 border border-gray-600 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                />
+              </div>
             </div>
           </div>
 
@@ -227,46 +230,12 @@ const SearchBar = ({
               placeholder="Filter by genre..."
             />
           </div>
-
-          {/* Active Filters Indicator */}
-          {hasActiveFilters && (
-            <div className="mt-4 p-3 bg-gray-750 rounded-lg">
-              <p className="text-sm text-gray-300 mb-2">Active Filters:</p>
-              <div className="flex flex-wrap gap-2">
-                {filters.minRating > 0 && (
-                  <span className="bg-purple-600 text-white px-2 py-1 rounded-full text-xs">
-                    Min {filters.minRating}+ Stars
-                  </span>
-                )}
-                {filters.maxRating < 5 && (
-                  <span className="bg-purple-600 text-white px-2 py-1 rounded-full text-xs">
-                    Max {filters.maxRating} Stars
-                  </span>
-                )}
-                {filters.yearFrom > 1900 && (
-                  <span className="bg-purple-600 text-white px-2 py-1 rounded-full text-xs">
-                    From {filters.yearFrom}
-                  </span>
-                )}
-                {filters.yearTo < new Date().getFullYear() && (
-                  <span className="bg-purple-600 text-white px-2 py-1 rounded-full text-xs">
-                    To {filters.yearTo}
-                  </span>
-                )}
-                {filters.genre && (
-                  <span className="bg-purple-600 text-white px-2 py-1 rounded-full text-xs">
-                    Genre: {filters.genre}
-                  </span>
-                )}
-              </div>
-            </div>
-          )}
         </div>
       )}
 
       {/* Search Tips */}
-      {localSearchTerm && (
-        <div className="text-sm text-gray-400 animate-in fade-in duration-200">
+      {!localSearchTerm && (
+        <div className="text-sm text-gray-400">
           <p>💡 Search tips: Use titles, director names, or genres</p>
         </div>
       )}
