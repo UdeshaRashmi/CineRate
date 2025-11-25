@@ -8,6 +8,8 @@ import MovieDetail from './pages/MovieDetail';
 import AddMovie from './pages/AddMovie';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import MyProfile from './pages/MyProfile';
+import MyReviews from './pages/MyReviews';
 import './App.css';
 
 function App() {
@@ -24,6 +26,8 @@ function App() {
             <Route path="/edit-movie/:id" element={<AddMovie />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/profile" element={<MyProfile />} />
+            <Route path="/my-reviews" element={<MyReviews />} />
           </Routes>
         </main>
         <Footer />

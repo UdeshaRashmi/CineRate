@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+ import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Film, Menu, X, Star, Home, Plus, User, Search, Info, Mail, Eye } from 'lucide-react';
+import { Film, Menu, X, Star, Home, Plus, User, Search, Info, Mail } from 'lucide-react';
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -23,10 +23,6 @@ const Header = () => {
   ];
 
   const isActive = (path) => {
-    // Special handling for movie detail pages
-    if (path === '/movie/1') {
-      return location.pathname.startsWith('/movie/');
-    }
     return location.pathname === path;
   };
 
