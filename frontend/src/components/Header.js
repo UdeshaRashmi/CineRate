@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Film, Menu, X, Star, Home, Plus, User, Search, Info, Mail } from 'lucide-react';
+import { Film, Menu, X, Star, Home, Plus, User, Search, Info, Mail, LogIn, UserPlus } from 'lucide-react';
 import { AuthContext } from '../contexts/AuthContext';
 
 const Header = () => {
@@ -24,6 +24,8 @@ const Header = () => {
     { name: 'Home', href: '/', icon: Home },
     { name: 'About', href: '/about', icon: Info },
     { name: 'Contact', href: '/contact', icon: Mail },
+    { name: 'Login', href: '/login', icon: LogIn },
+    { name: 'Sign Up', href: '/signup', icon: UserPlus },
   ];
 
   // Determine which navigation to show based on authentication status
@@ -144,9 +146,9 @@ const Header = () => {
               </button>
             </div>
 
-            {/* Auth Menu or User Menu - Desktop */}
+            {/* User Menu - Desktop (only shown when authenticated) */}
             <div className="hidden md:block">
-              {isAuthenticated ? (
+              {isAuthenticated && (
                 <div className="relative">
                   <button
                     onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
@@ -184,9 +186,6 @@ const Header = () => {
                     </div>
                   )}
                 </div>
-              ) : (
-                // This section will be empty since we're not showing login/signup in nav
-                <div></div>
               )}
             </div>
 
@@ -254,9 +253,9 @@ const Header = () => {
               })}
             </nav>
 
-            {/* Auth Menu or User Menu - Mobile */}
+            {/* User Menu - Mobile (only shown when authenticated) */}
             <div className="mt-6 pt-6 border-t border-gray-700 px-2">
-              {isAuthenticated ? (
+              {isAuthenticated && (
                 <div className="space-y-3">
                   {userMenuItems.map((item) => {
                     const Icon = item.icon;
@@ -279,9 +278,6 @@ const Header = () => {
                     <span className="font-medium text-lg">Sign Out</span>
                   </button>
                 </div>
-              ) : (
-                // This section will be empty since we're not showing login/signup in nav
-                <div></div>
               )}
             </div>
           </div>
