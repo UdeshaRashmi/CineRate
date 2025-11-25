@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, UserPlus, User, Mail, Lock } from 'lucide-react';
+import { AuthContext } from '../contexts/AuthContext';
 
 const Signup = () => {
   const navigate = useNavigate();
+  const { register } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -75,19 +77,22 @@ const Signup = () => {
     
     setIsLoading(true);
     
-    // Simulate API call
     try {
-      // In a real app, you would make an API call here
-      // const response = await authService.signup(formData);
+      const response = await register({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password
+      });
       
-      // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // For demo purposes, we'll just navigate to login
-      navigate('/login');
+      if (response.success) {
+        // Redirect to login page
+        navigate('/login');
+      } else {
+        setErrors({ general: response.message || 'An error occurred during signup' });
+      }
     } catch (error) {
       console.error('Signup error:', error);
-      setErrors({ general: 'An error occurred during signup. Please try again.' });
+      setErrors({ general: error.response?.data?.message || 'An error occurred during signup' });
     } finally {
       setIsLoading(false);
     }

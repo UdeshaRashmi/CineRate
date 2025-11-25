@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, LogIn, User } from 'lucide-react';
+import { AuthContext } from '../contexts/AuthContext';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -58,19 +60,18 @@ const Login = () => {
     
     setIsLoading(true);
     
-    // Simulate API call
     try {
-      // In a real app, you would make an API call here
-      // const response = await authService.login(formData);
+      const response = await login(formData);
       
-      // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // For demo purposes, we'll just navigate to home
-      navigate('/');
+      if (response.success) {
+        // Redirect to home page
+        navigate('/');
+      } else {
+        setErrors({ general: response.message || 'Invalid email or password' });
+      }
     } catch (error) {
       console.error('Login error:', error);
-      setErrors({ general: 'Invalid email or password' });
+      setErrors({ general: error.response?.data?.message || 'Invalid email or password' });
     } finally {
       setIsLoading(false);
     }

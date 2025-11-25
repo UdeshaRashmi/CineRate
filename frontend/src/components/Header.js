@@ -1,16 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Film, Menu, X, Star, Home, Plus, User, Search, Info, Mail } from 'lucide-react';
+import { AuthContext } from '../contexts/AuthContext';
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-
-  // For demo purposes, we'll show full menu when user is logged in
-  // In a real app, you would check authentication state
-  const isAuthenticated = true;
+  const { isAuthenticated, logout } = useContext(AuthContext);
 
   // Navigation items for authenticated users
   const fullNavigation = [
@@ -53,6 +51,13 @@ const Header = () => {
   const handleQuickSearch = (query) => {
     navigate(`/movies?search=${encodeURIComponent(query)}`);
     setIsMobileMenuOpen(false);
+  };
+
+  const handleLogout = () => {
+    logout();
+    setIsUserMenuOpen(false);
+    // Navigate to home page
+    navigate('/');
   };
 
   return (
@@ -170,10 +175,7 @@ const Header = () => {
                       })}
                       <div className="border-t border-gray-700 mt-2 pt-2">
                         <button
-                          onClick={() => {
-                            // Handle logout
-                            setIsUserMenuOpen(false);
-                          }}
+                          onClick={handleLogout}
                           className="w-full text-left flex items-center space-x-3 px-4 py-3 text-red-400 hover:bg-gray-700 hover:text-red-300 transition-colors rounded-lg mx-2"
                         >
                           <span className="font-medium">Sign Out</span>
@@ -271,10 +273,7 @@ const Header = () => {
                     );
                   })}
                   <button
-                    onClick={() => {
-                      // Handle logout
-                      setIsMobileMenuOpen(false);
-                    }}
+                    onClick={handleLogout}
                     className="w-full flex items-center space-x-4 px-5 py-4 text-red-400 hover:bg-gray-800 hover:text-red-300 rounded-xl transition-colors"
                   >
                     <span className="font-medium text-lg">Sign Out</span>
